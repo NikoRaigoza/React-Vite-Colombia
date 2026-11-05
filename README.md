@@ -66,19 +66,19 @@ Se eligió Tailwind para mantener los estilos junto al marcado sin archivos CSS 
 
 ### 1. Vista inicial
 
-![Vista inicial](docs/screenshots/01-vista-inicial.png)
+![Vista inicial](./Parcial%202%20Frontend/public/docs/Screenshot%202026-11-05%20at%202.12.07 PM.png)
 
 ### 2. Departamento seleccionado
 
-![Departamento seleccionado](docs/screenshots/02-departamento-seleccionado.png)
+![Departamento seleccionado](./Parcial%202%20Frontend/public/docs/Screenshot%202026-11-05%20at%202.12.37 PM.png)
 
 ### 3. Modal con el detalle completo
 
-![Detalle del departamento](docs/screenshots/03-modal-detalle.png)
+![Detalle del departamento](./Parcial%202%20Frontend/public/docs/Screenshot%202026-11-05%20at%202.12.56 PM.png)
 
 ### 4. Lista de ciudades
 
-![Lista de ciudades](docs/screenshots/04-ciudades.png)
+![Lista de ciudades](./Parcial%202%20Frontend/public/docs/Screenshot%202026-11-05%20at%202.13.18 PM.png)
 
 ## Créditos
 
