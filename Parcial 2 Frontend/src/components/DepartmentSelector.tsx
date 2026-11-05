@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import DepartmentModal from "./DepartmentModal";
 
-// Forma de cada departamento que devuelve la API
 interface Department {
   id: number;
   name: string;
@@ -13,7 +12,6 @@ function DepartmentSelector() {
   const [selected, setSelected] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  // Obtener departamentos al cargar
   useEffect(() => {
     fetch("https://api-colombia.com/api/v1/Department")
       .then((response) => response.json())
@@ -23,14 +21,13 @@ function DepartmentSelector() {
       });
   }, []);
 
-  // Buscar el departamento completo a partir del id seleccionado
   const department = departments.find((dep) => dep.id === Number(selected));
 
   return (
-    <div className="relative w-full max-w-md p-8 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
+    <div className="w-full max-w-md mx-auto mt-8 p-8 rounded-2xl bg-white border border-slate-200 shadow-xl">
       <label
         htmlFor="department"
-        className="block mb-3 text-sm font-medium uppercase tracking-wider text-slate-300"
+        className="block mb-3 text-sm font-semibold uppercase tracking-wider text-blue-800"
       >
         Departamento
       </label>
@@ -40,7 +37,7 @@ function DepartmentSelector() {
           id="department"
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
-          className="w-full appearance-none px-4 py-3 pr-10 rounded-xl bg-slate-900/60 border border-white/10 text-white cursor-pointer transition focus:outline-none focus:ring-2 focus:ring-yellow-400 hover:border-white/30"
+          className="w-full appearance-none px-4 py-3 pr-10 rounded-xl bg-slate-50 border border-slate-300 text-slate-800 cursor-pointer transition focus:outline-none focus:ring-2 focus:ring-yellow-400 hover:border-slate-400"
         >
           <option value="">Selecciona un departamento</option>
           {departments.map((dep) => (
@@ -50,16 +47,15 @@ function DepartmentSelector() {
           ))}
         </select>
 
-        {/* Flecha personalizada */}
-        <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+        <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-500">
           ▾
         </span>
       </div>
 
       {department && (
-        <div className="mt-6 p-5 rounded-xl bg-slate-900/50 border-l-4 border-yellow-400">
-          <h2 className="text-xl font-bold text-white">{department.name}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-300 line-clamp-3">
+        <div className="mt-6 p-5 rounded-xl bg-slate-50 border border-slate-200 border-l-4 border-l-yellow-400">
+          <h2 className="text-xl font-bold text-slate-900">{department.name}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-slate-600 line-clamp-3">
             {department.description}
           </p>
 
