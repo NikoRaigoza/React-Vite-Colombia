@@ -1,27 +1,67 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 
-function DepartmentModal({ departmentId, onClose }) {
-  const [department, setDepartment] = useState(null);
-  const [cities, setCities] = useState([]);
+// Detalle de un departamento (/Department/{id})
+interface DepartmentDetail {
+  id: number;
+  name: string;
+  description: string;
+  population: number | null;
+  surface: number | null;
+  municipalities: number | null;
+  phonePrefix: string | null;
+  cityCapital: {
+    id: number;
+    name: string;
+  } | null;
+}
 
-  // 1. Pedir el detalle y las ciudades al mismo tiempo
+// Cada ciudad (/Department/{id}/cities)
+interface City {
+  id: number;
+  name: string;
+  population: number | null;
+}
+
+interface DepartmentModalProps {
+  departmentId: number;
+  onClose: () => void;
+}
+
+function DepartmentModal({ departmentId, onClose }: DepartmentModalProps) {
+  const [department, setDepartment] = useState<DepartmentDetail | null>(null);
+  const [cities, setCities] = useState<City[]>([]);
+
+  // Pedir el detalle y las ciudades al mismo tiempo
   useEffect(() => {
     const base = "https://api-colombia.com/api/v1/Department";
 
     Promise.all([
-      fetch(`${base}/${departmentId}`).then((r) => r.json()),
-      fetch(`${base}/${departmentId}/cities`).then((r) => r.json()),
+      fetch(`${base}/${departmentId}`).then((r) => r.json() as Promise<DepartmentDetail>),
+      fetch(`${base}/${departmentId}/cities`).then((r) => r.json() as Promise<City[]>),
     ]).then(([dep, cityList]) => {
       setDepartment(dep);
       setCities(cityList.sort((a, b) => a.name.localeCompare(b.name)));
     });
   }, [departmentId]);
 
-  // 2. Formatear números al estilo colombiano: 6.677.930
-  const format = (n) => (n ? n.toLocaleString("es-CO") : "N/D");
+  // Formatear números al estilo colombiano: 6.677.930
+  const format = (n: number | null): string =>
+    n ? n.toLocaleString("es-CO") : "N/D";
 
-  // 3. Renderizar el modal directamente en <body>
+  // Datos clave para la cuadrícula
+  const stats = department
+    ? [
+        { label: "Capital", value: department.cityCapital?.name ?? "N/D" },
+        { label: "Población", value: format(department.population) },
+        { label: "Superficie", value: `${format(department.surface)} km²` },
+        { label: "Municipios", value: format(department.municipalities) },
+        { label: "Indicativo", value: department.phonePrefix ?? "N/D" },
+        { label: "Ciudades", value: String(cities.length) },
+      ]
+    : [];
+
+  // Renderizar el modal directamente en <body>
   return createPortal(
     <div
       onClick={onClose}
@@ -40,6 +80,7 @@ function DepartmentModal({ departmentId, onClose }) {
               <h2 className="text-3xl font-bold text-white">{department.name}</h2>
               <button
                 onClick={onClose}
+                aria-label="Cerrar"
                 className="text-2xl text-slate-400 hover:text-white transition"
               >
                 ✕
@@ -51,14 +92,7 @@ function DepartmentModal({ departmentId, onClose }) {
 
             {/* Datos clave */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6">
-              {[
-                { label: "Capital", value: department.cityCapital?.name ?? "N/D" },
-                { label: "Población", value: format(department.population) },
-                { label: "Superficie", value: `${format(department.surface)} km²` },
-                { label: "Municipios", value: department.municipalities },
-                { label: "Indicativo", value: department.phonePrefix },
-                { label: "Ciudades", value: cities.length },
-              ].map((stat) => (
+              {stats.map((stat) => (
                 <div
                   key={stat.label}
                   className="p-4 rounded-xl bg-white/5 border border-white/10"
